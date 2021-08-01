@@ -12,15 +12,13 @@ SOCKETIO="wss://bitgud-backend.herokuapp.com"
 buzzer = Buzzer(BUZZER_PIN)
 relay = OutputDevice(RELAY_PIN, active_high=True, initial_value=False)
 
-async def listen():
-    await sio.connect(SOCKETIO,auth={token: UID})
+sio = socketio.Client()
+sio.connect(SOCKETIO,auth={token: UID})
 
-    @sio.on('shock')
-    def shock():
-        # handle the message
-        relay.on()
-        sleep(1)
-        relay.off()
-            
-
-asyncio.get_event_loop().run_forever(listen())
+@sio.on('shock')
+def shock():
+    # handle the message
+    relay.on()
+    sleep(1)
+    relay.off()
+        
